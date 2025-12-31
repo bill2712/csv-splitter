@@ -17,6 +17,7 @@ const SplitConfig: React.FC<SplitConfigProps> = ({
   isProcessing
 }) => {
   const estimatedFiles = Math.ceil(totalRows / (rowsPerFile || 1));
+  const presets = [50, 100, 500, 1000, 5000, 10000];
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
@@ -25,12 +26,12 @@ const SplitConfig: React.FC<SplitConfigProps> = ({
         <h2 className="text-lg font-semibold">Configuration</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         <div>
           <label htmlFor="rows" className="block text-sm font-medium text-slate-600 mb-2">
-            Rows per file
+            Data rows per file <span className="text-slate-400 font-normal">(excluding header)</span>
           </label>
-          <div className="relative">
+          <div className="relative mb-3">
             <input
               id="rows"
               type="number"
@@ -43,17 +44,37 @@ const SplitConfig: React.FC<SplitConfigProps> = ({
               rows
             </div>
           </div>
-          <p className="mt-2 text-xs text-slate-500">
-            Total records: <span className="font-medium text-slate-700">{totalRows.toLocaleString()}</span>
+          
+          <div className="flex flex-wrap gap-2 mb-4">
+            {presets.map(preset => (
+              <button
+                key={preset}
+                onClick={() => setRowsPerFile(preset)}
+                className={`text-xs px-2.5 py-1 rounded-md border transition-all ${
+                  rowsPerFile === preset 
+                    ? 'bg-indigo-100 border-indigo-200 text-indigo-700 font-medium' 
+                    : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {preset.toLocaleString()}
+              </button>
+            ))}
+          </div>
+
+          <p className="text-xs text-slate-500">
+            Total data rows available: <span className="font-medium text-slate-700">{totalRows.toLocaleString()}</span>
           </p>
         </div>
 
-        <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 flex flex-col justify-center">
-            <span className="text-xs text-slate-500 uppercase tracking-wide font-semibold mb-1">Estimated Output</span>
-            <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-slate-800">{estimatedFiles}</span>
-                <span className="text-sm text-slate-600">files</span>
+        <div className="bg-slate-50 p-6 rounded-lg border border-slate-100 flex flex-col justify-center h-full">
+            <span className="text-xs text-slate-500 uppercase tracking-wide font-semibold mb-2">Estimated Output</span>
+            <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-3xl font-bold text-slate-800">{estimatedFiles}</span>
+                <span className="text-sm text-slate-600 font-medium">CSV files</span>
             </div>
+            <p className="text-xs text-slate-400">
+              Each file will contain up to {rowsPerFile.toLocaleString()} data rows plus the header.
+            </p>
         </div>
       </div>
 

@@ -1,0 +1,5 @@
+{
+  "name": "CSV Splitter Pro",
+  "description": "A professional tool to split large CSV files into smaller chunks while preserving headers. Includes AI-powered dataset analysis.",
+  "requestFramePermissions": []
+}
